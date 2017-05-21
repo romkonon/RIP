@@ -1,10 +1,12 @@
 import java.util.LinkedList;
 import java.util.List;
 
-public class Hero implements Moveble {
+public abstract class Hero implements Moveble {
     private static Hero hero;
     private static String name;
 
+
+    private HeroType heroType = null;
     private double hp;
     private double maxHp;
     private double speed;
@@ -12,32 +14,40 @@ public class Hero implements Moveble {
     private double dyingSpeed;
     private List<Power> listOfPower;
 
-
     private int level;
     private long score;
     private short lives;
-    public static void setName(String name){
+
+    Hero(HeroType heroType){
+        this.heroType = heroType;
+    }
+
+    public HeroType getHeroType() {
+        return heroType;
+    }
+    public abstract void born();
+     void setDyingSpeed(double dyingSpeed) {
+        this.dyingSpeed = dyingSpeed;
+    }
+     static void setName(String name){
         Hero.name = name;
     }
-    private Hero() {
-        level = 1;
-        score = 0L;
-        lives = 3;
 
-        speed = 1.0;
-        dyingSpeed = 0.1;
-        maxHp = 2;
-        hp = maxHp;
-        bonusSpeed = 0.0;
-        listOfPower = new LinkedList<>();
-    }
-    public static Hero getHero(){
+
+     static Hero getHero(HeroType heroClass){
         if (hero==null)
-            hero = new Hero();
+            hero = HeroFactory.bornHero(heroClass);
         return hero;
     }
 
-    public void decreaseHP() {
+    public double getBonusSpeed() {
+        return bonusSpeed;
+    }
+
+     void setBonusSpeed(double bonusSpeed) {
+        this.bonusSpeed = bonusSpeed;
+    }
+     void decreaseHP() {
         hp -= dyingSpeed;
         if (!isAlive()) {
             lives--;
@@ -72,15 +82,15 @@ public class Hero implements Moveble {
         } while (flag);
     }
 
-    private void setMaxHp(double hp) {
+     void setMaxHp(double hp) {
         this.maxHp = hp;
     }
 
-    private void setSpeed(double speed) {
+     void setSpeed(double speed) {
         this.speed = speed;
     }
 
-    public boolean isAlive() {
+    private boolean isAlive() {
         return hp > 0.0;
     }
 
@@ -88,7 +98,7 @@ public class Hero implements Moveble {
         if (!isAlive()) lives--;
     }
 
-    public boolean isDead() {
+     boolean isDead() {
         return lives < 1;
     }
 
@@ -112,10 +122,52 @@ public class Hero implements Moveble {
         levelUp();
     }
 
+    public double getHp() {
+        return hp;
+    }
+
+    public void setHp(double hp) {
+        this.hp = hp;
+    }
+
+    public double getMaxHp() {
+        return maxHp;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public List<Power> getListOfPower() {
+        return listOfPower;
+    }
+
+     void setListOfPower(List<Power> listOfPower) {
+        this.listOfPower = listOfPower;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+     void setLevel(int level) {
+        this.level = level;
+    }
+
+    public long getScore() {
+        return score;
+    }
+
+    public short getLives() {
+        return lives;
+    }
+
+     void setLives(short lives) {
+        this.lives = lives;
+    }
     //  for DEBUG
-public void setScore(long score) {
+     void setScore(long score) {
     this.score = score;
-    levelUp();
 }
 
 
